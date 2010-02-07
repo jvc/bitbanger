@@ -1,0 +1,12 @@
+lfod:~% alias bb=bitbanger
+lfod:~% bb 1 2 3 4
+      mask: 0x0000001e -> 00 00 00 1e
+Bin:  0 0 0 0 0 0 0 0   0 0 0 0 0 0 0 0   0 0 0 0 0 0 0 0   0 0 0 1 1 1 1 0  
+Set:  1 2 3 4
+  reversed: 0x1e000000 -> 1e 00 00 00
+
+lfod:~% bb 0x1e   
+      mask: 0x0000001e -> 00 00 00 1e
+Bin:  0 0 0 0 0 0 0 0   0 0 0 0 0 0 0 0   0 0 0 0 0 0 0 0   0 0 0 1 1 1 1 0  
+Set:  1 2 3 4
+  reversed: 0x1e000000 -> 1e 00 00 00
