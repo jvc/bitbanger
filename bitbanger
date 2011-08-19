@@ -1,19 +1,17 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 '''
 
-bitbanger OPTIONS MASK
+bitbanger OPTIONS WORD
 bitbanger OPTIONS POS [POS]...
 
-POS is a bit position, MASK is a bitmask specified as an integer in
-the byte order of this host. 0x may be used to indicate hex.
+POS is a bit position, WORD is a base 16 integer prefixed with 0x in
+the byte order of this host.
 
 Example:
 > bb 1 2 3 4
 > bb 0x1e
-
 '''
-
-__version__ = "0.1"
+__version__ = "0.2"
 __date__ = "2010-02-07"
 __author__ = "Justin Chouinard <jvc@jvic.net>"
 __copyright__ = "Copyright 2010, Justin Chouinard"
@@ -23,7 +21,7 @@ import sys
 
 BYTE_ORDER_MSG="The byte order of this host is %s endian." % (sys.byteorder)
 
-def get_bit_list(byte_list = None, mask = 0):
+def get_bit_list(byte_list = None, word = 0):
     '''Return a list() of int()s set to 0 or 1.
     '''
     bits = []
@@ -31,18 +29,18 @@ def get_bit_list(byte_list = None, mask = 0):
         for byte in byte_list:
             for offset in range(8):
                 bits.append((1 << int(offset)) & int(byte))
-    elif mask:
+    elif word:
         for bit in range(word_size):
-            bits.append((1 << int(bit)) & int(mask))
+            bits.append((1 << int(bit)) & int(word))
 
     return bits
 
-def get_byte_list(mask, word_size):
+def get_byte_list(word, word_size):
     '''Return a list() of bytes.
     '''
     bytes = []
     for byte in range(word_size / 8):
-        val = 0xff & (int(mask) >> (8 * byte))
+        val = 0xff & (int(word) >> (8 * byte))
         bytes.append(val)
 
     return bytes
@@ -81,9 +79,9 @@ def print_byte_list(byte_list):
     print
 
 
-def main(mask, options):
-    print "      mask: 0x%08x ->" % mask,
-    byte_list = get_byte_list(mask, options.word_size)
+def main(word, options):
+    print "      word: 0x%08x ->" % word,
+    byte_list = get_byte_list(word, options.word_size)
     bit_list = get_bit_list(byte_list=byte_list)
     print_byte_list(byte_list)
     print_bit_list(bit_list)
@@ -104,20 +102,12 @@ if __name__ == '__main__':
                       help="Set word size to SIZE bits", metavar="SIZE")
     (options, args) = parser.parse_args()
 
-    mask = 0
-    if len(args) > 1:
-        # user passed in enabled bits, build generic mask
-        for arg in args:
-            mask |= (1 << (int(arg)))
+    word = 0
+    if args[0].startswith('0x'):
+        word = int(args[0], 16)
     else:
-        if len(args) > 0:
-            # user passed in a mask, native for this host. the use
-            # eval() instead of hex() will require 0x to be specified
-            # on the command line, but it allows the mask to be
-            # specified in decimal or octal.
-            mask = eval(args[0])
-        else:
-            parser.print_help()
-            exit(1)
+        # user passed in enabled bits, build generic word
+        for arg in args:
+            word |= (1 << (int(arg)))
     
-    main(mask, options)
+    main(word, options)
