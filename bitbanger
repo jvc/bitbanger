@@ -66,7 +66,8 @@ def print_bit_list(bit_list):
         if item:
             setbits.append(str(pos))
         pos += 1
-    print ' '.join(setbits)
+    print ' '.join(setbits),
+    print ' (%d bits set)' % len(setbits)
 
 def print_byte_list(byte_list):
     '''Print a list() of bytes. Traverse backwards so it reads properly
