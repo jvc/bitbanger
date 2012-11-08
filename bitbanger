@@ -11,7 +11,7 @@ Example:
 > bb 1 2 3 4
 > bb 0x1e
 '''
-__version__ = "0.2"
+__version__ = "0.3"
 __date__ = "2010-02-07"
 __author__ = "Justin Chouinard <jvc@jvic.net>"
 __copyright__ = "Copyright 2010, Justin Chouinard"
@@ -21,7 +21,7 @@ import sys
 
 BYTE_ORDER_MSG="The byte order of this host is %s endian." % (sys.byteorder)
 
-def get_bit_list(byte_list = None, word = 0):
+def get_bit_list(word_size, byte_list = None, word = 0):
     '''Return a list() of int()s set to 0 or 1.
     '''
     bits = []
@@ -54,11 +54,15 @@ def print_bit_list(bit_list):
     while pos > -1:
         bit = 1 if bit_list[pos] else 0
         print bit,
-        if pos % 8 == 0:
+        if pos % 32 == 0:
+            print
+            print '     ',
+        elif pos % 8 == 0:
             print ' ',
+
         pos -= 1
     print
-        
+
     print "Set: ",
     setbits = []
     pos = 0
@@ -83,7 +87,7 @@ def print_byte_list(byte_list):
 def main(word, options):
     print "      word: 0x%08x ->" % word,
     byte_list = get_byte_list(word, options.word_size)
-    bit_list = get_bit_list(byte_list=byte_list)
+    bit_list = get_bit_list(options.word_size, byte_list=byte_list)
     print_byte_list(byte_list)
     print_bit_list(bit_list)
 
@@ -94,7 +98,6 @@ def main(word, options):
     byte_list.reverse()
     print_byte_list(byte_list)
 
-    
 if __name__ == '__main__':
     from optparse import OptionParser
 
@@ -109,6 +112,11 @@ if __name__ == '__main__':
     else:
         # user passed in enabled bits, build generic word
         for arg in args:
-            word |= (1 << (int(arg)))
-    
+            for arg in arg.split(","):
+                if len(arg) > 0:
+                    word |= (1 << (int(arg)))
+
+    if word >= 0xffffffff:
+        options.word_size = 64
+
     main(word, options)
