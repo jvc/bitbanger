@@ -85,7 +85,10 @@ def print_byte_list(byte_list):
 
 
 def main(word, options):
-    print "      word: 0x%08x ->" % word,
+    if options.word_size == 64:
+        print "      word: 0x%016x ->" % word,
+    else:
+        print "      word: 0x%08x ->" % word,
     byte_list = get_byte_list(word, options.word_size)
     bit_list = get_bit_list(options.word_size, byte_list=byte_list)
     print_byte_list(byte_list)
