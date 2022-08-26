@@ -98,9 +98,9 @@ def main(word, options):
     def to_hex_str(input):
         return "%02x" % input
 
-    print("  reversed: 0x%s ->" % ''.join(map(to_hex_str, byte_list)), end=' ')
-    byte_list.reverse()
-    print_byte_list(byte_list)
+    #print("  reversed: 0x%s ->" % ''.join(map(to_hex_str, byte_list)), end=' ')
+    #byte_list.reverse()
+    #print_byte_list(byte_list)
 
 if __name__ == '__main__':
     from optparse import OptionParser
