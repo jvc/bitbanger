@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 '''
 
 bitbanger OPTIONS WORD
@@ -49,29 +49,29 @@ def print_bit_list(bit_list):
     '''Print a list() of bits. Traverse backwards so it reads properly
     with the high bit on the LHS.
     '''
-    print "Bin: ",
+    print("Bin: ", end=' ')
     pos = len(bit_list) - 1
     while pos > -1:
         bit = 1 if bit_list[pos] else 0
-        print bit,
+        print(bit, end=' ')
         if pos % 32 == 0:
-            print
-            print '     ',
+            print()
+            print('     ', end=' ')
         elif pos % 8 == 0:
-            print ' ',
+            print(' ', end=' ')
 
         pos -= 1
-    print
+    print()
 
-    print "Set: ",
+    print("Set: ", end=' ')
     setbits = []
     pos = 0
     for item in bit_list:
         if item:
             setbits.append(str(pos))
         pos += 1
-    print ' '.join(setbits),
-    print ' (%d bits set)' % len(setbits)
+    print(' '.join(setbits), end=' ')
+    print(' (%d bits set)' % len(setbits))
 
 def print_byte_list(byte_list):
     '''Print a list() of bytes. Traverse backwards so it reads properly
@@ -79,16 +79,16 @@ def print_byte_list(byte_list):
     '''
     index = len(byte_list) - 1
     while index > -1:
-        print "%02x" % byte_list[index],
+        print("%02x" % byte_list[index], end=' ')
         index -= 1
-    print
+    print()
 
 
 def main(word, options):
     if options.word_size == 64:
-        print "      word: 0x%016x ->" % word,
+        print("      word: 0x%016x ->" % word, end=' ')
     else:
-        print "      word: 0x%08x ->" % word,
+        print("      word: 0x%08x ->" % word, end=' ')
     byte_list = get_byte_list(word, options.word_size)
     bit_list = get_bit_list(options.word_size, byte_list=byte_list)
     print_byte_list(byte_list)
@@ -97,7 +97,7 @@ def main(word, options):
     def to_hex_str(input):
         return "%02x" % input
 
-    print "  reversed: 0x%s ->" % ''.join(map(to_hex_str, byte_list)),
+    print("  reversed: 0x%s ->" % ''.join(map(to_hex_str, byte_list)), end=' ')
     byte_list.reverse()
     print_byte_list(byte_list)
 
