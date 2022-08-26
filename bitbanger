@@ -11,10 +11,10 @@ Example:
 > bb 1 2 3 4
 > bb 0x1e
 '''
-__version__ = "0.3"
+__version__ = "0.4"
 __date__ = "2010-02-07"
 __author__ = "Justin Chouinard <jvc@jvic.net>"
-__copyright__ = "Copyright 2010, Justin Chouinard"
+__copyright__ = "Copyright 2010-2022, Justin Chouinard"
 __license__ = "MIT"
 
 import sys
@@ -39,7 +39,8 @@ def get_byte_list(word, word_size):
     '''Return a list() of bytes.
     '''
     bytes = []
-    for byte in range(word_size / 8):
+    num_bytes = int(word_size / 8)
+    for byte in range(num_bytes):
         val = 0xff & (int(word) >> (8 * byte))
         bytes.append(val)
 
